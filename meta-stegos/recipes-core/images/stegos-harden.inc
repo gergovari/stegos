@@ -10,6 +10,16 @@ setup_readonly_volatiles() {
 
     # urandom init script needs to write/delete random-seed
     echo "d root root 0755 /var/lib/urandom none" > ${IMAGE_ROOTFS}/etc/default/volatiles/98_urandom
+
+    # Fix overlayfs on read-only rootfs with SELinux (force bind mount fallback)
+    if [ -f ${IMAGE_ROOTFS}/etc/init.d/read-only-rootfs-hook.sh ]; then
+        sed -i 's|if ! mount -t overlay.*|if false; then : ; else|' ${IMAGE_ROOTFS}/etc/init.d/read-only-rootfs-hook.sh
+    fi
+
+    # Fix /var/log mkdir File exists error on first boot
+    if [ -f ${IMAGE_ROOTFS}/etc/init.d/selinux-init ]; then
+        sed -i 's|test -x /etc/init.d/auditd|mkdir -p /var/volatile/log\n\ttest -x /etc/init.d/auditd|' ${IMAGE_ROOTFS}/etc/init.d/selinux-init
+    fi
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_readonly_volatiles; "
