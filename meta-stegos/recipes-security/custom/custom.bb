@@ -4,4 +4,4 @@ SRC_URI += " \
     file://stegos-custom.if \
 "
 
-inherit refpolicy
+inherit refpolicy-targeted
