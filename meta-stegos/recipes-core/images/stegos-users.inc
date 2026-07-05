@@ -1,7 +1,7 @@
 inherit extrausers
 
 EXTRA_USERS_PARAMS = " \
-    useradd -G wheel steguser; \
+    useradd -G sudo steguser; \
 "
 
 setup_autologin() {
@@ -19,3 +19,13 @@ setup_autologin() {
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_autologin; "
+
+setup_sudoers() {
+    install -d ${IMAGE_ROOTFS}/etc/sudoers.d
+
+    echo '%wheel ALL=(ALL) NOPASSWD: ALL' > ${IMAGE_ROOTFS}/etc/sudoers.d/wheel
+
+    chmod 0440 ${IMAGE_ROOTFS}/etc/sudoers.d/stegosuser
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "setup_sudoers; "
