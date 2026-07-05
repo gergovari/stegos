@@ -23,9 +23,9 @@ ROOTFS_POSTPROCESS_COMMAND += "setup_autologin; "
 setup_sudoers() {
     install -d ${IMAGE_ROOTFS}/etc/sudoers.d
 
-    echo '%wheel ALL=(ALL) NOPASSWD: ALL' > ${IMAGE_ROOTFS}/etc/sudoers.d/wheel
+    echo '%sudo ALL=(ALL) NOPASSWD: ALL' > ${IMAGE_ROOTFS}/etc/sudoers.d/sudo
 
-    chmod 0440 ${IMAGE_ROOTFS}/etc/sudoers.d/wheel
+    chmod 0440 ${IMAGE_ROOTFS}/etc/sudoers.d/sudo
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_sudoers; "
