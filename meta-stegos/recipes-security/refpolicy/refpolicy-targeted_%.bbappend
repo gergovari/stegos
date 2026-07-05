@@ -10,4 +10,4 @@ do_inject_stegos_policy() {
     echo "stegos-custom = module" >> ${S}/policy/modules.conf
 }
 
-addtask inject_stegos_policy after do_patch before do_configure
+addtask inject_stegos_policy after do_configure before do_compile
