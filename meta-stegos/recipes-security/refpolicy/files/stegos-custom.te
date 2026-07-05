@@ -1,22 +1,32 @@
 module stegos-custom 0.1;
 
 require {
-	type klogd_t;
-	type mount_t;
-	type syslogd_t;
-	type var_log_t;
+	type bin_t;
 	type container_file_t;
 	type container_var_lib_t;
-	type bin_t;
 	type dockerd_t;
-	class file { append create execute getattr ioctl map open read rename setattr unlink write };
-	class dir { add_name create read remove_name rename reparent setattr write };
+	type ifconfig_t;
+	type initrc_runtime_t;
+	type klogd_t;
+	type lastlog_t;
+	type mount_t;
+	type pam_runtime_t;
+	type semanage_store_t;
+	type syslogd_t;
+	type var_lib_t;
+	type var_log_t;
+
 	class blk_file create;
 	class capability mknod;
+	class dir { add_name create mounton read remove_name rename reparent setattr write };
+	class file { append create execute getattr ioctl map open read rename setattr unlink write };
 }
 
 #============= dockerd_t ==============
 allow dockerd_t var_log_t:file { append ioctl };
+
+#============= ifconfig_t ==============
+allow ifconfig_t bin_t:file map;
 
 #============= klogd_t ==============
 allow klogd_t bin_t:file { execute map read };
@@ -24,19 +34,15 @@ allow klogd_t bin_t:file { execute map read };
 #============= mount_t ==============
 allow mount_t container_file_t:blk_file create;
 allow mount_t container_file_t:dir { add_name create };
-
-#!!!! This avc can be allowed using the boolean 'allow_mount_anyfile'
-allow mount_t container_file_t:file open;
-allow mount_t container_file_t:file { create read write };
-allow mount_t container_var_lib_t:dir { add_name create remove_name rename reparent setattr write };
-
-#!!!! This avc can be allowed using the boolean 'allow_mount_anyfile'
-allow mount_t container_var_lib_t:dir read;
-
-#!!!! This avc can be allowed using the boolean 'allow_mount_anyfile'
-allow mount_t container_var_lib_t:file { getattr open };
-allow mount_t container_var_lib_t:file { create read rename setattr unlink write };
+allow mount_t container_file_t:file { create open read write };
+allow mount_t container_var_lib_t:dir { add_name create read remove_name rename reparent setattr write };
+allow mount_t container_var_lib_t:file { create getattr open read rename setattr unlink write };
+allow mount_t initrc_runtime_t:dir mounton;
+allow mount_t lastlog_t:dir read;
+allow mount_t pam_runtime_t:dir read;
 allow mount_t self:capability mknod;
+allow mount_t semanage_store_t:dir read;
+allow mount_t var_lib_t:file read;
 
 #============= syslogd_t ==============
 allow syslogd_t bin_t:file { execute map read };
