@@ -25,7 +25,7 @@ setup_sudoers() {
 
     echo '%wheel ALL=(ALL) NOPASSWD: ALL' > ${IMAGE_ROOTFS}/etc/sudoers.d/wheel
 
-    chmod 0440 ${IMAGE_ROOTFS}/etc/sudoers.d/stegosuser
+    chmod 0440 ${IMAGE_ROOTFS}/etc/sudoers.d/wheel
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_sudoers; "
