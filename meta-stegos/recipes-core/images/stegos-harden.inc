@@ -33,7 +33,9 @@ fi
 mountpoint -q /sys/fs/cgroup || mount -t cgroup2 -o rw,nosuid,nodev,noexec,relatime,nsdelegate cgroup2 /sys/fs/cgroup
 # Enable controllers for children so docker sub-cgroups get limits
 if [ -f /sys/fs/cgroup/cgroup.controllers ]; then
-    cat /sys/fs/cgroup/cgroup.controllers > /sys/fs/cgroup/cgroup.subtree_control 2>/dev/null || true
+    for c in $(cat /sys/fs/cgroup/cgroup.controllers); do
+        echo "+$c" > /sys/fs/cgroup/cgroup.subtree_control 2>/dev/null || true
+    done
 fi
 exit 0
 EOF
