@@ -7,15 +7,15 @@ SRC_URI += " \
 "
 
 do_configure:prepend() {
-    mkdir -p ${S}/policy/modules/contrib/stegos-custom
+    install -d ${S}/policy/modules/contrib/stegos-custom
     
-    cp -f ${WORKDIR}/stegos-custom.te ${S}/policy/modules/contrib/stegos-custom/stegos-custom.te
-    cp -f ${WORKDIR}/stegos-custom.fc ${S}/policy/modules/contrib/stegos-custom/stegos-custom.fc
-    cp -f ${WORKDIR}/stegos-custom.if ${S}/policy/modules/contrib/stegos-custom/stegos-custom.if
+    install -m 0644 ${WORKDIR}/stegos-custom.te ${S}/policy/modules/contrib/stegos-custom/
+    install -m 0644 ${WORKDIR}/stegos-custom.fc ${S}/policy/modules/contrib/stegos-custom/
+    install -m 0644 ${WORKDIR}/stegos-custom.if ${S}/policy/modules/contrib/stegos-custom/
 }
 
 do_configure:append() {
-    sed -i -e '/^stegos-custom =/d' ${S}/policy/modules.conf
-    
-    echo "stegos-custom = module" >> ${S}/policy/modules.conf
+    if ! grep -q "stegos-custom" ${S}/policy/modules.conf; then
+        echo "stegos-custom = module" >> ${S}/policy/modules.conf
+    fi
 }
