@@ -1,4 +1,4 @@
-policy_module(stegos_custom, 1.0)
+policy_module(stegos_custom, 1.1)
 
 require {
     type klogd_t;
@@ -9,28 +9,60 @@ require {
     type container_var_lib_t;
     type bin_t;
     type dockerd_t;
+    type debugfs_t;
+    type sysfs_t;
+    type pam_runtime_t;
+    type lastlog_t;
+    type semanage_store_t;
+    type var_lib_t;
+    type ifconfig_t;
+    type initrc_runtime_t;
+    type cgroup_t;
+    type tmpfs_t;
     class file { append create execute getattr ioctl map open read rename setattr unlink write };
-    class dir { add_name create read remove_name rename reparent setattr write };
+    class dir { add_name create mounton read remove_name rename reparent setattr write };
     class blk_file create;
+    class lnk_file read;
     class capability mknod;
+    class filesystem { associate mount };
 }
+
+#============= debugfs_t ==============
+# debugfs mounting inside sysfs at boot
+allow debugfs_t sysfs_t:filesystem associate;
 
 #============= dockerd_t ==============
 allow dockerd_t var_log_t:file { append ioctl };
+
+#============= ifconfig_t ==============
+# ip command mapping busybox binary
+allow ifconfig_t bin_t:file { execute getattr map open read };
 
 #============= klogd_t ==============
 allow klogd_t bin_t:file { execute map read };
 
 #============= mount_t ==============
+# Container filesystem operations
 allow mount_t container_file_t:blk_file create;
 allow mount_t container_file_t:dir { add_name create };
-allow mount_t container_file_t:file open;
-allow mount_t container_file_t:file { create read write };
-allow mount_t container_var_lib_t:dir { add_name create remove_name rename reparent setattr write };
-allow mount_t container_var_lib_t:dir read;
-allow mount_t container_var_lib_t:file { getattr open };
-allow mount_t container_var_lib_t:file { create read rename setattr unlink write };
+allow mount_t container_file_t:file { create open read write };
+allow mount_t container_var_lib_t:dir { add_name create read remove_name rename reparent setattr write };
+allow mount_t container_var_lib_t:file { create getattr open read rename setattr unlink write };
 allow mount_t self:capability mknod;
+
+# Boot-time restorecon running in mount_t context
+allow mount_t pam_runtime_t:file read;
+allow mount_t pam_runtime_t:lnk_file read;
+allow mount_t lastlog_t:file read;
+allow mount_t semanage_store_t:file read;
+allow mount_t semanage_store_t:dir read;
+allow mount_t var_lib_t:file { getattr open read };
+
+# Cgroup controller mounting
+allow mount_t initrc_runtime_t:dir mounton;
+allow mount_t tmpfs_t:dir mounton;
+allow mount_t cgroup_t:dir mounton;
+allow mount_t cgroup_t:filesystem mount;
 
 #============= syslogd_t ==============
 allow syslogd_t bin_t:file { execute map read };

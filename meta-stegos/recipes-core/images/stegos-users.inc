@@ -12,7 +12,10 @@ setup_autologin() {
     chmod 0755 ${IMAGE_ROOTFS}/usr/sbin/autologin
 
     if [ -f ${IMAGE_ROOTFS}/etc/inittab ]; then
+        # Patch VT getty lines (tty1 etc)
         sed -i 's|/sbin/getty|/sbin/getty -n -l /usr/sbin/autologin|g' ${IMAGE_ROOTFS}/etc/inittab
+        # Patch serial console lines (ttyS0 etc) which use ttyrun/start_getty
+        sed -i 's|/usr/sbin/ttyrun \(ttyS[0-9]*\) /bin/start_getty \([0-9]*\) \(ttyS[0-9]*\) \([a-z0-9]*\)|/sbin/getty -n -l /usr/sbin/autologin \2 \1 \4|g' ${IMAGE_ROOTFS}/etc/inittab
     fi
 
     # FIXME: if switching init systems this needs to be changed
