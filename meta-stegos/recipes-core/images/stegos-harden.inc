@@ -37,3 +37,7 @@ EOF
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_readonly_volatiles; "
+
+# Enable swap accounting for Docker
+APPEND += " swapaccount=1 cgroup_enable=memory"
+QB_KERNEL_CMDLINE_APPEND += " swapaccount=1 cgroup_enable=memory"
