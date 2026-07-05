@@ -1,4 +1,4 @@
-policy_module(stegos_custom, 1.1)
+policy_module(stegos_custom, 1.2)
 
 require {
     type klogd_t;
@@ -20,7 +20,7 @@ require {
     type cgroup_t;
     type tmpfs_t;
     class file { append create execute getattr ioctl map open read rename setattr unlink write };
-    class dir { add_name create mounton read remove_name rename reparent setattr write };
+    class dir { add_name create getattr mounton read remove_name rename reparent search setattr write };
     class blk_file create;
     class lnk_file read;
     class capability mknod;
@@ -51,11 +51,11 @@ allow mount_t container_var_lib_t:file { create getattr open read rename setattr
 allow mount_t self:capability mknod;
 
 # Boot-time restorecon running in mount_t context
-allow mount_t pam_runtime_t:file read;
+allow mount_t pam_runtime_t:file { getattr open read };
 allow mount_t pam_runtime_t:lnk_file read;
-allow mount_t lastlog_t:file read;
-allow mount_t semanage_store_t:file read;
-allow mount_t semanage_store_t:dir read;
+allow mount_t lastlog_t:file { getattr open read };
+allow mount_t semanage_store_t:file { getattr open read };
+allow mount_t semanage_store_t:dir { getattr read search };
 allow mount_t var_lib_t:file { getattr open read };
 
 # Cgroup controller mounting
