@@ -20,6 +20,20 @@ setup_readonly_volatiles() {
     if [ -f ${IMAGE_ROOTFS}/etc/init.d/selinux-init ]; then
         sed -i 's|test -x /etc/init.d/auditd|mkdir -p /var/volatile/log\n\ttest -x /etc/init.d/auditd|' ${IMAGE_ROOTFS}/etc/init.d/selinux-init
     fi
+
+    # Switch cgroup mounts to cgroup2 to solve Docker's cgroup v1 deprecation warning
+    if [ -f ${IMAGE_ROOTFS}/bin/cgroups-mount ]; then
+        cat << 'EOF' > ${IMAGE_ROOTFS}/bin/cgroups-mount
+#!/bin/sh
+set -e
+if grep -v '^#' /etc/fstab | grep -q cgroup; then
+    echo "cgroups mounted from fstab, not mounting /sys/fs/cgroup"
+    exit 0
+fi
+mountpoint -q /sys/fs/cgroup || mount -t cgroup2 -o rw,nosuid,nodev,noexec,relatime,nsdelegate cgroup2 /sys/fs/cgroup
+exit 0
+EOF
+    fi
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_readonly_volatiles; "
