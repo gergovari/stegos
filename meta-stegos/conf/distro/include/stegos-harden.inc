@@ -1,5 +1,3 @@
-require conf/distro/include/security_flags.inc
-
 EXTRA_IMAGE_FEATURES:remove = "debug-tweaks"
 
 IMAGE_FEATURES:remove = "package-management"
