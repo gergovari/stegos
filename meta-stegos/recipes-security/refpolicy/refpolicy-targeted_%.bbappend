@@ -7,11 +7,11 @@ SRC_URI += " \
 "
 
 do_configure:prepend() {
+    ls -l ${WORKDIR}
+    
     install -d ${S}/policy/modules/contrib/stegos-custom
     
-    install -m 0644 ${WORKDIR}/stegos-custom.te ${S}/policy/modules/contrib/stegos-custom/
-    install -m 0644 ${WORKDIR}/stegos-custom.fc ${S}/policy/modules/contrib/stegos-custom/
-    install -m 0644 ${WORKDIR}/stegos-custom.if ${S}/policy/modules/contrib/stegos-custom/
+    cp ${WORKDIR}/stegos-custom.* ${S}/policy/modules/contrib/stegos-custom/
 }
 
 do_configure:append() {
