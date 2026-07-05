@@ -1,3 +1,5 @@
+policy_module(stegos_custom, 1.0)
+
 require {
     type klogd_t;
     type mount_t;
