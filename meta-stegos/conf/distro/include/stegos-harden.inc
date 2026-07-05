@@ -5,5 +5,3 @@ IMAGE_FEATURES:remove = "package-management"
 DISTRO_FEATURES:append = " acl xattr pam selinux"
 
 PREFERRED_PROVIDER_virtual/refpolicy = "refpolicy-targeted"
-
-IMAGE_INSTALL:append = " custom"
