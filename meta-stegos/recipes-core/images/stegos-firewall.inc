@@ -37,7 +37,7 @@ case "$1" in
 
         # Custom Host Ports (Injected at build time)
         #HOST_PORTS_MARKER#
-    } >/dev/null 2>&1
+    } </dev/null >/dev/null 2>&1
     ;;
   *)
     echo "Usage: $0 {start}"
