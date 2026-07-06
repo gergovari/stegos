@@ -1,7 +1,9 @@
 inherit extrausers
 
+IMAGE_FEATURES += "ssh-server-dropbear allow-empty-password"
+
 EXTRA_USERS_PARAMS = " \
-    useradd -G sudo steguser; \
+    useradd -p '' -G sudo steguser; \
 "
 
 setup_autologin() {
