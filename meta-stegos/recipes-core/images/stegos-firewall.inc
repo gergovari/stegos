@@ -1,4 +1,4 @@
-IMAGE_INSTALL += "iptables kernel-module-nf-conntrack kernel-module-nf-conntrack-ipv4"
+IMAGE_INSTALL += "iptables"
 
 STEGOS_FIREWALL_EXT_IFACE ?= "eth0"
 
