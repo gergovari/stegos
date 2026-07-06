@@ -4,7 +4,7 @@ STEGOS_FIREWALL_EXT_IFACE ?= "eth0"
 
 # Host ports to expose to the outside world
 # Example: STEGOS_FIREWALL_TCP_PORTS = "22"
-STEGOS_FIREWALL_TCP_PORTS ?= "22"
+STEGOS_FIREWALL_TCP_PORTS ?= ""
 
 setup_firewall() {
     install -d ${IMAGE_ROOTFS}/etc/init.d

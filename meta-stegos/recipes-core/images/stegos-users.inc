@@ -1,6 +1,7 @@
 inherit extrausers
 
-IMAGE_FEATURES += "ssh-server-dropbear allow-empty-password"
+# Uncomment for testing SSH
+# IMAGE_FEATURES += "ssh-server-dropbear allow-empty-password"
 
 EXTRA_USERS_PARAMS = " \
     useradd -p '' -G sudo steguser; \
