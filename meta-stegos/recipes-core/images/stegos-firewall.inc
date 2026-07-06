@@ -23,21 +23,21 @@ setup_firewall() {
 
 case "$1" in
   start)
-    echo "Starting StegOS Firewall..."
+    # Permanently redirect all file descriptors for the rest of the script.
+    # This prevents the shell from saving the console FD to a high number (like FD 10)
+    # which iptables would otherwise inherit and trigger an SELinux denial.
+    exec </dev/null >/dev/null 2>&1
     
-    # Run iptables commands without console output to avoid SELinux tty_device_t denials
-    {
-        # 1. Host Firewall (INPUT chain)
-        # This protects the host itself. Docker containers are managed automatically
-        # by Docker in the PREROUTING/FORWARD chains.
-        iptables -P INPUT DROP
-        iptables -P FORWARD DROP
-        iptables -A INPUT -i lo -j ACCEPT
-        iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    # 1. Host Firewall (INPUT chain)
+    # This protects the host itself. Docker containers are managed automatically
+    # by Docker in the PREROUTING/FORWARD chains.
+    iptables -P INPUT DROP
+    iptables -P FORWARD DROP
+    iptables -A INPUT -i lo -j ACCEPT
+    iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-        # Custom Host Ports (Injected at build time)
-        #HOST_PORTS_MARKER#
-    } </dev/null >/dev/null 2>&1
+    # Custom Host Ports (Injected at build time)
+    #HOST_PORTS_MARKER#
     ;;
   *)
     echo "Usage: $0 {start}"
