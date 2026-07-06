@@ -25,14 +25,19 @@ case "$1" in
   start)
     echo "Starting StegOS Firewall..."
     
-    # 1. Host Firewall (INPUT chain)
-    iptables -P INPUT DROP
-    iptables -P FORWARD DROP
-    iptables -A INPUT -i lo -j ACCEPT
-    iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    # Run iptables commands without console output to avoid SELinux tty_device_t denials
+    {
+        # 1. Host Firewall (INPUT chain)
+        # This protects the host itself. Docker containers are managed automatically
+        # by Docker in the PREROUTING/FORWARD chains.
+        iptables -P INPUT DROP
+        iptables -P FORWARD DROP
+        iptables -A INPUT -i lo -j ACCEPT
+        iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-    #HOST_PORTS_MARKER#
-
+        # Custom Host Ports (Injected at build time)
+        #HOST_PORTS_MARKER#
+    } >/dev/null 2>&1
     ;;
   *)
     echo "Usage: $0 {start}"
