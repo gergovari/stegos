@@ -48,7 +48,7 @@ COMMIT
 EOF_RULES
 
     # Pre-load the module so iptables-restore doesn't trigger a kmod_t SELinux transition
-    modprobe xt_conntrack 2>/dev/null || true
+    setsid modprobe xt_conntrack 2>/dev/null || true
     
     # Pipe the rules and detach from the terminal to completely silence all SELinux checks
     cat /tmp/stegos-firewall.rules | setsid iptables-restore
