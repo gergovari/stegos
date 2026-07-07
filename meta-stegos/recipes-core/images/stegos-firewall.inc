@@ -36,7 +36,7 @@ case "$1" in
     # 1. Host Firewall (INPUT chain)
     # We use iptables-restore to apply all rules at once.
     # This is much cleaner and faster.
-    cat <<EOF > /tmp/stegos-firewall.rules
+    cat <<EOF_RULES > /tmp/stegos-firewall.rules
 *filter
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
@@ -45,7 +45,7 @@ case "$1" in
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 #HOST_PORTS_MARKER#
 COMMIT
-EOF
+EOF_RULES
     iptables-restore < /tmp/stegos-firewall.rules
     ;;
   *)
