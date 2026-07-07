@@ -23,3 +23,5 @@ setup_harden_fixes() {
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_harden_fixes; "
+
+inherit selinux-image
