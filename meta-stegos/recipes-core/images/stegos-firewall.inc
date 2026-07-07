@@ -36,10 +36,10 @@ case "$1" in
     # 1. Host Firewall (INPUT chain)
     # This protects the host itself. Docker containers are managed automatically
     # by Docker in the PREROUTING/FORWARD chains.
-    iptables -P INPUT DROP
-    iptables -P FORWARD DROP
-    iptables -A INPUT -i lo -j ACCEPT
-    iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    setsid iptables -P INPUT DROP
+    setsid iptables -P FORWARD DROP
+    setsid iptables -A INPUT -i lo -j ACCEPT
+    setsid iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
     # Custom Host Ports (Injected at build time)
     #HOST_PORTS_MARKER#
@@ -57,7 +57,7 @@ EOF
 
     # Inject Host Ports
     for port in ${STEGOS_FIREWALL_TCP_PORTS}; do
-        sed -i "/#HOST_PORTS_MARKER#/a \    iptables -A INPUT -i ${STEGOS_FIREWALL_EXT_IFACE} -p tcp --dport $port -j ACCEPT" ${IMAGE_ROOTFS}/etc/init.d/stegos-firewall
+        sed -i "/#HOST_PORTS_MARKER#/a \    setsid iptables -A INPUT -i ${STEGOS_FIREWALL_EXT_IFACE} -p tcp --dport $port -j ACCEPT" ${IMAGE_ROOTFS}/etc/init.d/stegos-firewall
     done
 
     chmod 755 ${IMAGE_ROOTFS}/etc/init.d/stegos-firewall
