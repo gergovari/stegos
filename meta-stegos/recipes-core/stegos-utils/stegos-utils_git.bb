@@ -6,8 +6,6 @@ LICENSE = "CLOSED"
 SRC_URI = "git://github.com/gergovari/stegos-utils.git;protocol=https;branch=master"
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}${bindir}
     for script in ${S}/*.sh; do
