@@ -28,6 +28,9 @@ case "$1" in
     # which iptables would otherwise inherit and trigger an SELinux denial.
     exec </dev/null >/dev/null 2>&1
     
+    # Close any other file descriptors leaked by Yocto sysvinit (usually FD 3 or 10)
+    exec 3>&- 4>&- 5>&- 6>&- 7>&- 8>&- 9>&- 10>&- 11>&- 12>&- 2>/dev/null
+    
     # 1. Host Firewall (INPUT chain)
     # This protects the host itself. Docker containers are managed automatically
     # by Docker in the PREROUTING/FORWARD chains.
