@@ -24,12 +24,14 @@ setup_firewall() {
 case "$1" in
   start)
     # Permanently redirect all file descriptors for the rest of the script.
-    # This prevents the shell from saving the console FD to a high number (like FD 10)
+    # This prevents the shell from saving the console FD to a high number
     # which iptables would otherwise inherit and trigger an SELinux denial.
     exec </dev/null >/dev/null 2>&1
     
-    # Close any other file descriptors leaked by Yocto sysvinit (usually FD 3 or 10)
-    exec 3>&- 4>&- 5>&- 6>&- 7>&- 8>&- 9>&- 10>&- 11>&- 12>&- 2>/dev/null
+    # Close any other file descriptors leaked by Yocto sysvinit (can be up to 1024)
+    for i in $(seq 3 1024); do
+        eval "exec $i>&-" 2>/dev/null
+    done
     
     # 1. Host Firewall (INPUT chain)
     # This protects the host itself. Docker containers are managed automatically
