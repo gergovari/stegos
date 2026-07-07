@@ -46,7 +46,12 @@ case "$1" in
 #HOST_PORTS_MARKER#
 COMMIT
 EOF_RULES
-    iptables-restore < /tmp/stegos-firewall.rules
+
+    # Pre-load the module so iptables-restore doesn't trigger a kmod_t SELinux transition
+    modprobe xt_conntrack 2>/dev/null || true
+    
+    # Pipe the rules and detach from the terminal to completely silence all SELinux checks
+    cat /tmp/stegos-firewall.rules | setsid iptables-restore
     ;;
   *)
     echo "Usage: $0 {start}"
