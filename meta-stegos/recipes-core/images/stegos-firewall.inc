@@ -34,15 +34,19 @@ case "$1" in
     done
     
     # 1. Host Firewall (INPUT chain)
-    # This protects the host itself. Docker containers are managed automatically
-    # by Docker in the PREROUTING/FORWARD chains.
-    setsid iptables -P INPUT DROP
-    setsid iptables -P FORWARD DROP
-    setsid iptables -A INPUT -i lo -j ACCEPT
-    setsid iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-
-    # Custom Host Ports (Injected at build time)
-    #HOST_PORTS_MARKER#
+    # We use iptables-restore to apply all rules at once.
+    # This is much cleaner and faster.
+    cat <<EOF > /tmp/stegos-firewall.rules
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+#HOST_PORTS_MARKER#
+COMMIT
+EOF
+    iptables-restore < /tmp/stegos-firewall.rules
     ;;
   *)
     echo "Usage: $0 {start}"
@@ -57,7 +61,7 @@ EOF
 
     # Inject Host Ports
     for port in ${STEGOS_FIREWALL_TCP_PORTS}; do
-        sed -i "/#HOST_PORTS_MARKER#/a \    setsid iptables -A INPUT -i ${STEGOS_FIREWALL_EXT_IFACE} -p tcp --dport $port -j ACCEPT" ${IMAGE_ROOTFS}/etc/init.d/stegos-firewall
+        sed -i "/#HOST_PORTS_MARKER#/a -A INPUT -i ${STEGOS_FIREWALL_EXT_IFACE} -p tcp --dport $port -j ACCEPT" ${IMAGE_ROOTFS}/etc/init.d/stegos-firewall
     done
 
     chmod 755 ${IMAGE_ROOTFS}/etc/init.d/stegos-firewall
