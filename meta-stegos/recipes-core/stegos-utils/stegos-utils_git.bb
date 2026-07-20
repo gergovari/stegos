@@ -1,7 +1,7 @@
 SUMMARY = "StegOS Utilities"
 DESCRIPTION = "Utility scripts for StegOS."
 HOMEPAGE = "https://github.com/gergovari/stegos-utils"
-LICENSE = "GPL"
+LICENSE = "CLOSED"
 
 SRC_URI = "git://github.com/gergovari/stegos-utils.git;protocol=https;branch=master"
 SRCREV = "${AUTOREV}"
