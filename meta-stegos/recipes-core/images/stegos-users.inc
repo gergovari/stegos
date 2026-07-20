@@ -21,6 +21,10 @@ setup_autologin() {
         sed -i 's|/usr/sbin/ttyrun \(ttyS[0-9]*\) /bin/start_getty \([0-9]*\) \(ttyS[0-9]*\) \([a-z0-9]*\)|/sbin/getty -n -l /usr/sbin/autologin \2 \1 \4|g' ${IMAGE_ROOTFS}/etc/inittab
     fi
 
+    # Ensure the autologin script gets the correct SELinux context (login_exec_t)
+    # otherwise getty_t will be denied execution permission.
+    echo "/usr/sbin/autologin -- system_u:object_r:login_exec_t:s0" >> ${IMAGE_ROOTFS}/etc/selinux/targeted/contexts/files/file_contexts
+    
     # FIXME: if switching init systems this needs to be changed
 }
 
