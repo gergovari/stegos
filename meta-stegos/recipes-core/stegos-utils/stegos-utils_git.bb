@@ -25,4 +25,6 @@ RDEPENDS:${PN} += " \
     python3-pyyaml \
     python3-jinja2 \
     python3-jsonschema \
+    e2fsprogs \
+    e2fsprogs-mke2fs \
 "
