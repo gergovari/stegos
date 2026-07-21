@@ -8,17 +8,14 @@ SRCREV = "${AUTOREV}"
 
 do_install() {
     install -d ${D}${bindir}
-    for script in ${S}/*.sh; do
+    for script in ${S}/bin/*; do
         if [ -f "$script" ]; then
-            script_name=$(basename "$script" .sh)
+            script_name=$(basename "$script")
+            # Automatically strip .sh extension during installation if present
+            script_name=${script_name%.sh}
             install -m 0755 "$script" "${D}${bindir}/$script_name"
         fi
     done
-    
-    # Install Python stegpkg manager
-    if [ -f "${S}/stegpkg" ]; then
-        install -m 0755 "${S}/stegpkg" "${D}${bindir}/stegpkg"
-    fi
 }
 
 FILES:${PN} += "${bindir}/*"
