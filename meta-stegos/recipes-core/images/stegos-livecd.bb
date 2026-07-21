@@ -5,5 +5,5 @@ require stegos-users.inc
 require stegos-net.inc
 require stegos-firewall.inc
 
-DESCRIPTION = "Packages StegOS as a bootable Live CD."
+DESCRIPTION = "Packages stegOS as a bootable Live CD."
 IMAGE_FSTYPES += "iso"

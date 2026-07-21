@@ -18,7 +18,7 @@ setup_firewall() {
 # Required-Stop:     
 # Default-Start:     S
 # Default-Stop:      0 6
-# Short-Description: StegOS Firewall
+# Short-Description: stegOS Firewall
 ### END INIT INFO
 
 case "$1" in

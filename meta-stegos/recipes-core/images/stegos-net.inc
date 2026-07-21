@@ -1,4 +1,4 @@
-# Network configuration for StegOS
+# Network configuration for stegOS
 
 setup_dns() {
     # The kernel configures eth0 via ip=dhcp, which gives us an IP and gateway,

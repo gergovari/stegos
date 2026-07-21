@@ -1,5 +1,5 @@
-SUMMARY = "StegOS Utilities"
-DESCRIPTION = "Utility scripts for StegOS."
+SUMMARY = "stegOS Utilities"
+DESCRIPTION = "Utility scripts for stegOS."
 HOMEPAGE = "https://github.com/gergovari/stegos-utils"
 LICENSE = "CLOSED"
 
