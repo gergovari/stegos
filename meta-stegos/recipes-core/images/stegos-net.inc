@@ -1,5 +1,10 @@
 # Network configuration for stegOS
 
+# Disable kernel-level DHCP to prevent conflicts with userspace DHCP.
+# This ensures networking is handled exactly like a bare-metal machine.
+# By passing "ip=none", runqemu won't pass its default "ip=dhcp", preventing the kernel from configuring eth0.
+QB_CMDLINE_IP_SLIRP = "ip=none"
+
 # Install standard networking utilities
 IMAGE_INSTALL += "init-ifupdown busybox-udhcpc"
 
