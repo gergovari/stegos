@@ -10,6 +10,12 @@
 # Port forwarding for development (SSH, HTTP, HTTPS)
 QB_SLIRP_OPT = "-netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:80,hostfwd=tcp::8443-:443"
 
+# Tell the kernel to configure eth0 via DHCP at boot.
+# APPEND writes to the ISO bootloader config (syslinux), which is what
+# actually supplies the kernel command line when booting from an ISO.
+# (QB_CMDLINE_IP_SLIRP only works for direct kernel boot, not ISO boot.)
+APPEND += "ip=dhcp"
+
 setup_networking() {
     # glibc requires nsswitch.conf to know to use DNS for host lookups.
     # core-image-minimal omits this by default.
