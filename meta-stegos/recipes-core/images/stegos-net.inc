@@ -10,9 +10,14 @@ setup_dns() {
     rm -f ${IMAGE_ROOTFS}/etc/resolv.conf
     
     # Bypass QEMU SLIRP DNS (10.0.2.3) because it proxies to the host's systemd-resolved which often fails.
-    # We use public DNS directly to ensure resolution always works via NAT.
-    echo "nameserver 8.8.8.8" > ${IMAGE_ROOTFS}/etc/resolv.conf
-    echo "nameserver 1.1.1.1" >> ${IMAGE_ROOTFS}/etc/resolv.conf
+    # QEMU SLIRP proxies DNS requests strictly on 10.0.2.3. We must query this IP
+    # so QEMU intercepts it and resolves via the host's DNS, bypassing outbound firewalls.
+    echo "nameserver 10.0.2.3" > ${IMAGE_ROOTFS}/etc/resolv.conf
+    echo "nameserver 8.8.8.8" >> ${IMAGE_ROOTFS}/etc/resolv.conf
+
+    # Standard glibc utilities require nsswitch.conf to know to use DNS.
+    # core-image-minimal omits this by default, causing ping to fail even if resolv.conf is correct.
+    echo "hosts: files dns" > ${IMAGE_ROOTFS}/etc/nsswitch.conf
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_dns; "
