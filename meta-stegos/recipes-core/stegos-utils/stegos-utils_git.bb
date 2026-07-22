@@ -33,4 +33,5 @@ RDEPENDS:${PN} += " \
     python3-jsonschema \
     e2fsprogs \
     e2fsprogs-mke2fs \
+    git \
 "
