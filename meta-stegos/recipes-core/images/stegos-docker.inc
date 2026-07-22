@@ -4,7 +4,7 @@ IMAGE_INSTALL += " \
 "
 
 setup_docker_fixes() {
-    # FIXME: this smells sysvinit specific
+    # Docker needs /var/lib/docker to exist at runtime on a read-only rootfs
     install -d ${IMAGE_ROOTFS}/etc/default/volatiles
     echo "d root root 0711 /var/lib/docker none" > ${IMAGE_ROOTFS}/etc/default/volatiles/99_docker
 
