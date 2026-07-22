@@ -9,11 +9,12 @@ setup_dns() {
     sed -i '/resolv.conf/d' ${IMAGE_ROOTFS}/etc/default/volatiles/00_core
     rm -f ${IMAGE_ROOTFS}/etc/resolv.conf
     
-    # Bypass QEMU SLIRP DNS (10.0.2.3) because it proxies to the host's systemd-resolved which often fails.
-    # QEMU SLIRP proxies DNS requests strictly on 10.0.2.3. We must query this IP
-    # so QEMU intercepts it and resolves via the host's DNS, bypassing outbound firewalls.
-    echo "nameserver 10.0.2.3" > ${IMAGE_ROOTFS}/etc/resolv.conf
-    echo "nameserver 8.8.8.8" >> ${IMAGE_ROOTFS}/etc/resolv.conf
+    # QEMU SLIRP's internal DNS proxy is dead due to host firewall restrictions.
+    # We must query public DNS directly, but the host firewall blocks UDP 53.
+    # By specifying 'options use-vc', glibc will use TCP for DNS queries, which the firewall allows!
+    echo "nameserver 8.8.8.8" > ${IMAGE_ROOTFS}/etc/resolv.conf
+    echo "nameserver 1.1.1.1" >> ${IMAGE_ROOTFS}/etc/resolv.conf
+    echo "options use-vc" >> ${IMAGE_ROOTFS}/etc/resolv.conf
 
     # Standard glibc utilities require nsswitch.conf to know to use DNS.
     # core-image-minimal omits this by default, causing ping to fail even if resolv.conf is correct.
