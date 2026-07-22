@@ -36,14 +36,14 @@ EOF
             sed -i 's/--insecure-registry=http:\/\/localhost:5000//g' "$f"
             
             # Remove unshare -m so Docker runs in the host mount namespace and can see Stegmap mounts
-            sed -i 's/"$unshare" -m -- //g' "$f"
+            sed -i 's/"\$unshare" -m -- //g' "$f"
 
-            sed -i '/printf "Starting $prog/a \
+            sed -i '/printf "Starting \$prog/a \
         # Close leaked sysvinit FDs to prevent dockerd from passing them to iptables\
         exec 3>&- 4>&- 5>&- 6>&- 7>&- 8>&- 9>&- 10>&- 11>&- 12>&- 2>/dev/null || true\
         if [ -d /sys/fs/cgroup ]; then \
             mkdir -p /sys/fs/cgroup/docker_daemon \
-            echo $$ > /sys/fs/cgroup/docker_daemon/cgroup.procs 2>/dev/null || true \
+            echo \$\$ > /sys/fs/cgroup/docker_daemon/cgroup.procs 2>/dev/null || true \
         fi' "$f"
         fi
     done
