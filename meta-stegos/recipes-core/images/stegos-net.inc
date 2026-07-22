@@ -9,10 +9,10 @@ setup_dns() {
     sed -i '/resolv.conf/d' ${IMAGE_ROOTFS}/etc/default/volatiles/00_core
     rm -f ${IMAGE_ROOTFS}/etc/resolv.conf
     
-    # QEMU SLIRP default DNS
-    echo "nameserver 10.0.2.3" > ${IMAGE_ROOTFS}/etc/resolv.conf
-    # Fallback public DNS
-    echo "nameserver 8.8.8.8" >> ${IMAGE_ROOTFS}/etc/resolv.conf
+    # Bypass QEMU SLIRP DNS (10.0.2.3) because it proxies to the host's systemd-resolved which often fails.
+    # We use public DNS directly to ensure resolution always works via NAT.
+    echo "nameserver 8.8.8.8" > ${IMAGE_ROOTFS}/etc/resolv.conf
+    echo "nameserver 1.1.1.1" >> ${IMAGE_ROOTFS}/etc/resolv.conf
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_dns; "
