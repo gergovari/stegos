@@ -3,7 +3,7 @@ DESCRIPTION = "Utility scripts for stegOS."
 HOMEPAGE = "https://github.com/gergovari/stegos-utils"
 LICENSE = "CLOSED"
 
-SRC_URI = "git://github.com/gergovari/stegos-utils.git;protocol=https;branch=master"
+SRC_URI = "git:///home/ubu/Documents/stegos-workspace/stegos-utils;protocol=file;branch=master"
 SRCREV = "${AUTOREV}"
 
 do_install() {
