@@ -34,6 +34,9 @@ EOF
             # Remove hardcoded localhost:5000 registry to fix docker pull
             sed -i 's/--registry-mirror=http:\/\/localhost:5000//g' "$f"
             sed -i 's/--insecure-registry=http:\/\/localhost:5000//g' "$f"
+            
+            # Remove unshare -m so Docker runs in the host mount namespace and can see Stegmap mounts
+            sed -i 's/"$unshare" -m -- //g' "$f"
 
             sed -i '/printf "Starting $prog/a \
         # Close leaked sysvinit FDs to prevent dockerd from passing them to iptables\
