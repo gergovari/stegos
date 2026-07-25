@@ -4,7 +4,7 @@ inherit extrausers
 # IMAGE_FEATURES += "ssh-server-dropbear allow-empty-password"
 
 EXTRA_USERS_PARAMS = " \
-    useradd -p '' -G sudo steguser; \
+    useradd -p '' -s /bin/bash -G sudo steguser; \
 "
 
 setup_autologin() {
@@ -25,7 +25,9 @@ setup_autologin() {
     # otherwise getty_t will be denied execution permission.
     echo "/usr/sbin/autologin -- system_u:object_r:login_exec_t:s0" >> ${IMAGE_ROOTFS}/etc/selinux/targeted/contexts/files/file_contexts
     
-    # FIXME: if switching init systems this needs to be changed
+    # Note: This inittab patching is sysvinit-specific.
+    # If INIT_MANAGER is changed in stegos.conf, this section must be
+    # replaced with the equivalent for the new init system.
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_autologin; "
