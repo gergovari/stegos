@@ -3,12 +3,16 @@ DESCRIPTION = "Utility scripts for stegOS."
 HOMEPAGE = "https://github.com/gergovari/stegos-utils"
 LICENSE = "CLOSED"
 
-SRC_URI = "git:///home/ubu/Documents/stegos-workspace/stegos-utils;protocol=file;branch=master"
+SRC_URI = "git://${TOPDIR}/../layers/stegos-utils;protocol=file;branch=master"
+inherit python3-dir
 SRCREV = "${AUTOREV}"
 
 do_install() {
     install -d ${D}${bindir}
     install -d ${D}${sysconfdir}/bash_completion.d
+    install -d ${D}${PYTHON_SITEPACKAGES_DIR}/steglib
+    
+    install -m 0644 ${S}/lib/steglib/*.py ${D}${PYTHON_SITEPACKAGES_DIR}/steglib/
     
     for script in ${S}/bin/*; do
         if [ -f "$script" ]; then
@@ -24,7 +28,7 @@ do_install() {
     done
 }
 
-FILES:${PN} += "${bindir}/* ${sysconfdir}/bash_completion.d/*"
+FILES:${PN} += "${bindir}/* ${sysconfdir}/bash_completion.d/* ${PYTHON_SITEPACKAGES_DIR}/steglib/*"
 
 RDEPENDS:${PN} += " \
     python3-core \

@@ -1,1 +1,0 @@
-INIT_MANAGER = "sysvinit"

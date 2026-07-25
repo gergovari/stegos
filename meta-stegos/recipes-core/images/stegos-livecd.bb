@@ -1,6 +1,6 @@
 require recipes-core/images/core-image-minimal.bb
 require stegos-pkgs.inc
-require stegos-harden.inc
+require stegos-harden-image.inc
 require stegos-users.inc
 require stegos-net.inc
 require stegos-firewall.inc

@@ -1,5 +1,5 @@
 require stegos-shell.inc
-require stegos-docker.inc
+require stegos-docker-image.inc
 
 IMAGE_INSTALL += " \
     base-passwd \
