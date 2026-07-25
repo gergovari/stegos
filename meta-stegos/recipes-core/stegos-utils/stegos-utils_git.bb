@@ -3,7 +3,7 @@ DESCRIPTION = "Utility scripts for stegOS."
 HOMEPAGE = "https://github.com/gergovari/stegos-utils"
 LICENSE = "CLOSED"
 
-SRC_URI = "git://${TOPDIR}/../layers/stegos-utils;protocol=file;branch=master"
+SRC_URI = "git://${TOPDIR}/../../../stegos-utils;protocol=file;branch=master"
 inherit python3-dir
 SRCREV = "${AUTOREV}"
 
