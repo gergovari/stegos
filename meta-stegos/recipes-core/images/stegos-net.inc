@@ -8,7 +8,7 @@
 # /etc/network/interfaces.
 
 # Port forwarding for development (SSH, HTTP, HTTPS)
-QB_SLIRP_OPT = "-netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:80,hostfwd=tcp::8443-:443"
+QB_SLIRP_OPT = "-netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::80-:80,hostfwd=tcp::443-:443"
 
 # Tell the kernel to configure eth0 via DHCP at boot.
 # APPEND writes to the ISO bootloader config (syslinux), which is what
