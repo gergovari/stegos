@@ -7,12 +7,11 @@ SRC_URI = "git://${TOPDIR}/../../../stegos-utils;protocol=file;branch=master"
 inherit python3-dir update-rc.d
 SRCREV = "${AUTOREV}"
 
-INITSCRIPT_PACKAGES = "${PN} ${PN}-map"
+INITSCRIPT_PACKAGES = "${PN} ${PN}-stegmap"
 INITSCRIPT_NAME:${PN} = "stegd"
 INITSCRIPT_PARAMS:${PN} = "defaults 90 10"
-
-INITSCRIPT_NAME:${PN}-map = "stegmap"
-INITSCRIPT_PARAMS:${PN}-map = "defaults 91 09"
+INITSCRIPT_NAME:${PN}-stegmap = "stegmap"
+INITSCRIPT_PARAMS:${PN}-stegmap = "defaults 91 09"
 
 do_install() {
     install -d ${D}${bindir}
@@ -39,15 +38,13 @@ do_install() {
     done
 }
 
+PACKAGES =+ "${PN}-stegmap"
+FILES:${PN}-stegmap = "${sysconfdir}/init.d/stegmap"
+RDEPENDS:${PN}-stegmap = "${PN}"
+
 FILES:${PN} += "${bindir}/* ${sysconfdir}/bash_completion.d/* ${PYTHON_SITEPACKAGES_DIR}/steglib/* ${sysconfdir}/init.d/stegd"
-FILES:${PN}-map = "${sysconfdir}/init.d/stegmap"
-
-PACKAGES =+ "${PN}-map"
-
-RDEPENDS:${PN}-map += "${PN}"
 
 RDEPENDS:${PN} += " \
-    ${PN}-map \
     python3-core \
     python3-pyyaml \
     python3-jinja2 \
