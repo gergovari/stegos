@@ -45,6 +45,7 @@ RDEPENDS:${PN}-stegmap = "${PN}"
 FILES:${PN} += "${bindir}/* ${sysconfdir}/bash_completion.d/* ${PYTHON_SITEPACKAGES_DIR}/steglib/* ${sysconfdir}/init.d/stegd"
 
 RDEPENDS:${PN} += " \
+    ${PN}-stegmap \
     python3-core \
     python3-pyyaml \
     python3-jinja2 \
