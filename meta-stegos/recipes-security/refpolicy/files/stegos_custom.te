@@ -104,6 +104,19 @@ allow sysadm_t stegd_var_run_t:dir search;
 allow sysadm_t stegd_var_run_t:sock_file write;
 allow sysadm_t stegd_t:unix_stream_socket connectto;
 
+# Allow init scripts to connect to the socket (for stegmap.init)
+gen_require(`
+    type initrc_t;
+')
+allow initrc_t stegd_var_run_t:dir search;
+allow initrc_t stegd_var_run_t:sock_file write;
+allow initrc_t stegd_t:unix_stream_socket connectto;
+
+# Allow initrc_t to create and append to the log file (shell redirect)
+allow initrc_t stegd_log_t:file { create open append write getattr };
+allow initrc_t stegd_log_t:dir search;
+
+
 # Execution
 domain_use_interactive_fds(stegd_t)
 
