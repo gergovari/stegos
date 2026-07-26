@@ -47,6 +47,7 @@ PACKAGES =+ "${PN}-map"
 RDEPENDS:${PN}-map += "${PN}"
 
 RDEPENDS:${PN} += " \
+    ${PN}-map \
     python3-core \
     python3-pyyaml \
     python3-jinja2 \
