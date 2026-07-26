@@ -1,0 +1,3 @@
+/usr/bin/stegd             --  gen_context(system_u:object_r:stegd_exec_t,s0)
+/run/stegos(/.*)?              gen_context(system_u:object_r:stegd_var_run_t,s0)
+/var/log/stegd\.log        --  gen_context(system_u:object_r:stegd_log_t,s0)

@@ -1,0 +1,22 @@
+## <summary>StegOS Daemon (stegd) policy interface</summary>
+
+########################################
+## <summary>
+##	Connect to stegd over a unix stream socket.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`stegd_admin',`
+	gen_require(`
+		type stegd_t;
+		type stegd_var_run_t;
+	')
+
+	allow $1 stegd_var_run_t:dir search;
+	allow $1 stegd_var_run_t:sock_file write;
+	allow $1 stegd_t:unix_stream_socket connectto;
+')

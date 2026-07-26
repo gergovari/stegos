@@ -24,7 +24,11 @@ require {
     class blk_file create;
     class lnk_file read;
     class capability mknod;
-    class filesystem { associate mount };
+    class filesystem { associate mount unmount };
+    
+    # New stegd types
+    type unconfined_t;
+    type sysadm_t;
 }
 
 #============= debugfs_t ==============
@@ -66,3 +70,62 @@ allow mount_t cgroup_t:filesystem mount;
 
 #============= syslogd_t ==============
 allow syslogd_t bin_t:file { execute map read };
+
+#============= stegd_t ==============
+type stegd_t;
+type stegd_exec_t;
+init_daemon_domain(stegd_t, stegd_exec_t)
+
+type stegd_var_run_t;
+files_pid_file(stegd_var_run_t)
+
+type stegd_log_t;
+logging_log_file(stegd_log_t)
+
+# Capabilities
+allow stegd_t self:capability { sys_admin chown dac_override fowner fsetid mknod setgid setuid sys_chroot sys_ptrace net_bind_service };
+allow stegd_t self:process { setpgid signal_perms execmem };
+
+# Sockets and networking
+allow stegd_t self:unix_stream_socket create_stream_socket_perms;
+allow stegd_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_bind_generic_node(stegd_t)
+corenet_tcp_bind_all_unreserved_ports(stegd_t)
+
+# Logging
+manage_files_pattern(stegd_t, stegd_log_t, stegd_log_t)
+logging_log_filetrans(stegd_t, stegd_log_t, file)
+
+# PID / Run files (Unix socket)
+manage_dirs_pattern(stegd_t, stegd_var_run_t, stegd_var_run_t)
+manage_files_pattern(stegd_t, stegd_var_run_t, stegd_var_run_t)
+manage_sock_files_pattern(stegd_t, stegd_var_run_t, stegd_var_run_t)
+files_pid_filetrans(stegd_t, stegd_var_run_t, { dir file sock_file })
+
+# Allow admin domains to connect to the socket
+allow unconfined_t stegd_var_run_t:dir search;
+allow unconfined_t stegd_var_run_t:sock_file write;
+allow unconfined_t stegd_t:unix_stream_socket connectto;
+
+allow sysadm_t stegd_var_run_t:dir search;
+allow sysadm_t stegd_var_run_t:sock_file write;
+allow sysadm_t stegd_t:unix_stream_socket connectto;
+
+# Execution
+corecmd_exec_bin(stegd_t)
+domain_use_interactive_fds(stegd_t)
+
+# Filesystem mounting and cgroups
+allow stegd_t cgroup_t:dir { manage_dir_perms mounton };
+allow stegd_t cgroup_t:filesystem { mount unmount };
+fs_mount_cgroup(stegd_t)
+fs_manage_cgroup_dirs(stegd_t)
+fs_manage_cgroup_files(stegd_t)
+
+# Mounting mapped devices
+allow stegd_t container_file_t:dir { manage_dir_perms mounton };
+allow stegd_t container_file_t:file manage_file_perms;
+allow stegd_t container_file_t:blk_file { getattr read write open };
+
+allow stegd_t tmpfs_t:dir { manage_dir_perms mounton };
+allow stegd_t tmpfs_t:file manage_file_perms;
