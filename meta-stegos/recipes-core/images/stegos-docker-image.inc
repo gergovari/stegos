@@ -46,6 +46,9 @@ EOF
             echo \$\$ > /sys/fs/cgroup/docker_daemon/cgroup.procs 2>/dev/null || true \
         fi' "$f"
         fi
+        
+        # Remove docker from init so it doesn't start automatically on boot
+        rm -f ${IMAGE_ROOTFS}/etc/rc*.d/*docker*
     done
 }
 
