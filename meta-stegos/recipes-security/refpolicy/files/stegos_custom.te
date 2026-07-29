@@ -136,9 +136,12 @@ allow stegd_t tmpfs_t:file manage_file_perms;
 gen_require(`
     type dockerd_exec_t;
 ')
-domain_auto_trans(stegd_t, dockerd_exec_t, dockerd_t)
+domtrans_pattern(stegd_t, dockerd_exec_t, dockerd_t)
 allow dockerd_t stegd_t:fd use;
 allow dockerd_t stegd_log_t:file { append write getattr ioctl };
+
+# Allow stegd_t to execute /bin/sh for shell redirection
+corecmd_exec_bin(stegd_t)
 
 # Allow dockerd to manage isolated directories
 allow dockerd_t container_file_t:dir { manage_dir_perms mounton };
