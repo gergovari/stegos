@@ -52,5 +52,5 @@ EOF
 ROOTFS_POSTPROCESS_COMMAND += "setup_docker_fixes; "
 
 # Enable swap accounting for Docker
-APPEND += " swapaccount=1 cgroup_enable=memory"
-QB_KERNEL_CMDLINE_APPEND += " swapaccount=1 cgroup_enable=memory"
+APPEND += " swapaccount=1 cgroup_enable=memory quiet loglevel=3"
+QB_KERNEL_CMDLINE_APPEND += " swapaccount=1 cgroup_enable=memory quiet loglevel=3"
