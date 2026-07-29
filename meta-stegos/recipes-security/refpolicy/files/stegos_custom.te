@@ -149,3 +149,12 @@ allow dockerd_t container_file_t:file manage_file_perms;
 allow dockerd_t container_file_t:lnk_file manage_lnk_file_perms;
 allow dockerd_t container_file_t:sock_file manage_sock_file_perms;
 allow dockerd_t container_file_t:fifo_file manage_fifo_file_perms;
+
+# Allow stegd to fix SELinux contexts on persistent storage
+gen_require(`
+    type unlabeled_t;
+')
+allow stegd_t unlabeled_t:dir { manage_dir_perms relabelfrom };
+allow stegd_t unlabeled_t:file { manage_file_perms relabelfrom };
+allow stegd_t container_file_t:dir relabelto;
+allow stegd_t container_file_t:file relabelto;
