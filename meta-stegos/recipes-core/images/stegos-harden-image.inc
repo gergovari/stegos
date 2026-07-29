@@ -21,9 +21,6 @@ setup_harden_fixes() {
         sed -i 's|test -x /etc/init.d/auditd|mkdir -p /var/volatile/log\n\ttest -x /etc/init.d/auditd|' ${IMAGE_ROOTFS}/etc/init.d/selinux-init
     fi
 
-    # Suppress verbose kernel networking messages (veth creations)
-    install -d ${IMAGE_ROOTFS}/etc/sysctl.d
-    echo "kernel.printk = 4 4 1 7" > ${IMAGE_ROOTFS}/etc/sysctl.d/99-quiet-network.conf
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "setup_harden_fixes; "
