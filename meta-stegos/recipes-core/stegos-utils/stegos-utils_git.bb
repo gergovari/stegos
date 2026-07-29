@@ -44,12 +44,26 @@ RDEPENDS:${PN}-stegmap = "${PN}"
 
 FILES:${PN} += "${bindir}/* ${sysconfdir}/bash_completion.d/* ${PYTHON_SITEPACKAGES_DIR}/steglib/* ${sysconfdir}/init.d/stegd"
 
+def get_python_requirements(d):
+    import os, re
+    reqs = []
+    topdir = d.getVar('TOPDIR')
+    if topdir:
+        req_file = os.path.normpath(os.path.join(topdir, '../../../stegos-utils/requirements.txt'))
+        if os.path.exists(req_file):
+            with open(req_file, 'r') as f:
+                for line in f:
+                    line = line.split('#')[0].strip()
+                    if line and not line.startswith('-'):
+                        pkg_name = re.split(r'[>=<~]', line)[0].strip().lower()
+                        if pkg_name:
+                            reqs.append('python3-' + pkg_name.replace('_', '-'))
+    return " ".join(reqs)
+
 RDEPENDS:${PN} += " \
     ${PN}-stegmap \
     python3-core \
-    python3-pyyaml \
-    python3-jinja2 \
-    python3-jsonschema \
+    ${@get_python_requirements(d)} \
     e2fsprogs \
     e2fsprogs-mke2fs \
     git \
