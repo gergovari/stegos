@@ -23,7 +23,12 @@ setup_autologin() {
 
     # Ensure the autologin script gets the correct SELinux context (login_exec_t)
     # otherwise getty_t will be denied execution permission.
-    echo "/usr/sbin/autologin -- system_u:object_r:login_exec_t:s0" >> ${IMAGE_ROOTFS}/etc/selinux/targeted/contexts/files/file_contexts
+    # Guard with a directory check: the SELinux policy dir may not exist when
+    # selinux is absent from DISTRO_FEATURES, and an unconditional echo >>
+    # to a missing parent path exits non-zero under BitBake's set -e.
+    if [ -d ${IMAGE_ROOTFS}/etc/selinux/targeted/contexts/files ]; then
+        echo "/usr/sbin/autologin -- system_u:object_r:login_exec_t:s0" >> ${IMAGE_ROOTFS}/etc/selinux/targeted/contexts/files/file_contexts
+    fi
     
     # Note: This inittab patching is sysvinit-specific.
     # If INIT_MANAGER is changed in stegos.conf, this section must be
